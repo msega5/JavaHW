@@ -1,0 +1,37 @@
+import java.util.Arrays;
+
+public class Printer {
+    public static void main(String[] args) {
+
+        int[] arr;
+
+        if (args.length == 0) {
+            arr = new int[]{1, 2, 2, 3, 4, 4, 5};
+        } else {
+            arr = Arrays.stream(args[0].split(", "))
+                    .mapToInt(Integer::parseInt)
+                    .toArray();
+        }
+
+        UniqueElements answer = new UniqueElements();
+        String result = Arrays.toString(answer.getUniqueElements(arr));
+        System.out.println(result);
+    }
+}
+
+
+import java.util.LinkedHashSet;
+
+public class UniqueElements {
+    public static int[] getUniqueElements(int[] arr) {
+
+        LinkedHashSet<Integer> linkedResult = new LinkedHashSet();
+        for (int num : arr) linkedResult.add(num);
+
+        int[] outputResult = new int[linkedResult.size()];
+        int index = 0;
+        for (int num : linkedResult) outputResult[index++] = num;
+
+        return outputResult;
+    }
+}
