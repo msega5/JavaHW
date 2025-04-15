@@ -1,0 +1,46 @@
+//Задание
+//Реализуйте структуру телефонной книги с помощью HashMap.
+//Программа также должна учитывать, что во входной структуре будут повторяющиеся имена
+//с разными телефонами, их необходимо считать, как одного человека с разными телефонами.
+//Вывод должен быть отсортирован по убыванию числа телефонов.
+
+
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+
+class Printer {
+    static class HashMapTelephoneBook {
+        
+        public static void addPhoneNumber(String name, String phoneNumber, HashMap<String, List<String>> phoneBook) {
+            phoneBook.putIfAbsent(name, new ArrayList<>());
+            phoneBook.get(name).add(phoneNumber);
+        }
+
+        public static void printSortedPhoneBook(HashMap<String, List<String>> phoneBook) {
+            ArrayList<Map.Entry<String, List<String>>> entries = new ArrayList<>(phoneBook.entrySet());
+            entries.sort((a, b) -> Integer.compare(b.getValue().size(), a.getValue().size()));
+            for (Map.Entry<String, List<String>> entry : entries) {
+                System.out.println(entry.getKey() + ": " + entry.getValue());
+            }
+        }
+    }
+
+
+    public static void main(String[] args) {
+        HashMap<String, List<String>> phoneBook = new HashMap<>();
+
+        HashMapTelephoneBook.addPhoneNumber("Иван", "123-456", phoneBook);
+        HashMapTelephoneBook.addPhoneNumber("Иван", "789-012", phoneBook);
+        HashMapTelephoneBook.addPhoneNumber("Мария", "345-678", phoneBook);
+        HashMapTelephoneBook.addPhoneNumber("Алексей", "901-234", phoneBook);
+        HashMapTelephoneBook.addPhoneNumber("Мария", "567-890", phoneBook);
+        HashMapTelephoneBook.addPhoneNumber("Иван", "234-567", phoneBook);
+
+        HashMapTelephoneBook1.printSortedPhoneBook(phoneBook);
+    }
+}
