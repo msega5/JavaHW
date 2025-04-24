@@ -1,0 +1,108 @@
+//Задание1.Преобразование строки в число
+class ConvertAndSum {
+
+    public static int convertAndSum(String[] strings) {
+        int result = 0;
+        for (String s : strings) {
+            try {
+                result += Integer.parseInt(s);
+                Sum100(result);
+            } catch (NumberFormatException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return result;
+    }
+
+    public static void Sum100(int result) {
+        if (result > 100) throw new ArithmeticException("Превышен лимит суммы (100)");
+    }
+}
+
+
+//Задача2.Объединение массивов с проверкой длины и содержимого
+import java.util.Arrays;
+import java.util.LinkedList;
+
+class MergeAndValidateArrays {
+    public static int[] mergeAndValidateArrays(int[] a, int[] b) {
+        if (validateNegativeArray(a) && validateNegativeArray(b))
+            throw new RuntimeException("Обнаружен отрицательный элемент");
+        if (!validateLengthArray(a, b))
+            throw new IllegalArgumentException("Длины массивов не равны");
+        int[] c = new int[a.length + b.length];
+        System.arraycopy(a, 0, c, 0, a.length);
+        System.arraycopy(b, 0, c, a.length, b.length);
+        return c;
+    }
+
+    public static boolean validateNegativeArray(int[] a) {
+        Arrays.sort(a);
+        return a[0] < 0;
+    }
+
+    public static boolean validateLengthArray(int[] a, int[] b) {
+        return a.length == b.length;
+    }
+
+    public static LinkedList<Integer> copyArrayToList(LinkedList<Integer> a, int[] b) {
+        for (int i = 0; i < b.length; i++) {
+            a.add(b[i]);
+        }
+        return a;
+    }
+}
+
+//Задача3.Обработка исключений для разностных массивов
+import java.util.Arrays;
+import java.util.List;
+
+class SubArraysWithExceptionHandling {
+
+    public static int[] subArraysWithExceptionHandling(int[] a, int[] b, e) {
+        if (!arrayLength(a, b)) throw new IllegalArgumentException();
+        if (arrayNegativeDifference(a, b)) throw new RuntimeException();
+        int[] result = new  int[a.length + b.length];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = a[i] - b[i];
+        }
+        return result;
+    }
+
+    public static boolean arrayLength(int[] a, int[] b) {
+        return a.length == b.length;
+    }
+
+    public static boolean arrayNegativeDifference(int[] a, int[] b) {
+        boolean result = false;
+        for (int i = 0; i < a.length; i++) {
+            if (a[i] < b[i]) result = true;
+        }
+        return result;
+    }
+}
+
+//Задача4.Поиск и замена строк
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+class FindAndReplace {
+    public static String[] findAndReplace(String[] strings,
+                                          String target,
+                                          String replacement,
+                                          List<String> errors) {
+
+        LinkedList<String> ls = new LinkedList<String>();
+        int count = 0;
+        for (int i = 0; i < strings.length; i++) {
+            if (strings[i] == target) {
+                ls.add(replacement);
+                count++;
+            } else ls.add(strings[i]);
+        }
+
+        if (count == 0) errors.add(new RuntimeException("New RuntimeException").getMessage());
+        return ls.stream().toList().toArray(new String[0]);
+    }
+}
