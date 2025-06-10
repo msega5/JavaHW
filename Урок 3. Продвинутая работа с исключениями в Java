@@ -1,0 +1,70 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+class DataError extends Exception {
+    public DataError(String message) {
+        super(message);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введите данные в формате: Фамилия Имя Отчество 01.01.1999 79123456789 пол");
+        String input = scanner.nextLine();
+        String[] data = input.split(" ");
+        try {
+            validateAndSaveData(data);
+        } catch (DataError e) {
+            System.err.println("Ошибка: " + e.getMessage());
+        } finally {
+            scanner.close();
+        }
+    }
+
+    private static void validateAndSaveData(String[] data) throws DataError {
+        if (data.length != 6) {
+            throw new DataError("Неверное количество данных. Ожидалось 6, получено " + data.length + ".");
+        }
+        String lastName = data[0];
+        String firstName = data[1];
+        String middleName = data[2];
+        String birthDate = data[3];
+        String phoneNumberStr = data[4];
+        String gender = data[5];
+        if (!lastName.matches("[а-яА-Я]+") || !firstName.matches("[а-яА-Я]+") || !middleName.matches("[а-яА-Я]+")) {
+            throw new DataError("Фамилия, имя и отчество должны состоять только из букв.");
+        }
+        if (!birthDate.matches("\\d{2}\\.\\d{2}\\.\\d{4}")) {
+            throw new DataError("Дата рождения должна быть в формате dd.mm.yyyy.");
+        }
+
+        long phoneNumber;
+        try {
+            phoneNumber = Long.parseLong(phoneNumberStr);
+            if (phoneNumber < 0) {
+                throw new DataError("Номер телефона должен быть целым беззнаковым числом.");
+            }
+        } catch (NumberFormatException e) {
+            throw new DataError("Номер телефона должен быть целым беззнаковым числом.");
+        }
+
+        if (!gender.matches("[fm]")) {
+            throw new DataError("Пол должен быть символом f или m.");
+        }
+        String formattedData = "<" + lastName + ">" + "<" + firstName + ">" + "<" + middleName + ">" + "<" + birthDate + ">" + "<" + phoneNumber + ">" + "<" + gender + ">";
+        saveToFile(lastName, formattedData);
+    }
+
+    private static void saveToFile(String fileName, String data) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".txt", true))) {
+            writer.write(data);
+            writer.newLine();
+            System.out.println("Данные успешно сохранены в файл " + fileName + ".txt");
+        } catch (IOException e) {
+            System.err.println("Ошибка при записи в файл: " + e.getMessage());
+        }
+    }
+}
